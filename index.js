@@ -8,7 +8,7 @@ const {
 const generateCode = require('./lib/codegen')
 
 const JSON_FILE_NAME = 'schema.json'
-const CODE_FILE_NAME = 'index.js'
+const CODE_FILE_NAME = 'index'
 
 class ResolvedType {
   constructor (hyperschema, fqn, description, existing) {
@@ -287,12 +287,12 @@ module.exports = class Hyperschema {
     return generateCode(this)
   }
 
-  static toDisk (hyperschema, dir) {
+  static toDisk (hyperschema, dir, { jsFileSuffix = 'js' } = {}) {
     if (!dir) dir = hyperschema.dir
     fs.mkdirSync(dir, { recursive: true })
 
     const jsonPath = p.join(p.resolve(dir), JSON_FILE_NAME)
-    const codePath = p.join(p.resolve(dir), CODE_FILE_NAME)
+    const codePath = p.join(p.resolve(dir), `${CODE_FILE_NAME}.${jsFileSuffix}`)
 
     fs.writeFileSync(jsonPath, JSON.stringify(hyperschema.toJSON(), null, 2), { encoding: 'utf-8' })
     fs.writeFileSync(codePath, hyperschema.toCode(), { encoding: 'utf-8' })
